@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Testable TODO card</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <main class="container">
+            <article class="todo-card" data-testid="test-todo-card">
+                <header class="todo-card-header">
+                    <h2 data-testid="test-todo-title">TESTABLE TODO ITEM CARD</h2>
+                    <div class="title-group">
+                        <div class="todo-group">
+                            <label for="todo-complete" data-testid="test-todo-complete-label" class="todo-complete">
+                                <input 
+                                    type="checkbox"
+                                    id="todo-complete"
+                                    data-testid="test-todo-complete-toggle"
+                                    aria-label="Mark task as complete"
+                                >
+                                <span class="slider"></span>
+                            </label>
+                            <label for="toggle-complete" class="toggle-complete"></label>
+                        </div>
+                        <span class="badge" data-testid="test-todo-priority" aria-label="High Priority">♦ High</span>
+                    </div>
+                   
+                </header>
+
+                <div class="todo-body">
+                    <p  data-testid="test-todo-description">
+                        Helps check if the task is done properly and helps in editing and deleting without confusion.
+                    </p>
+
+                    <div class="meta-info">
+                        <div class="date-box">
+                            
+                            <time datetime="2026-05-01T18:00" data-testid="test-todo-due-date"> May 1, 2026</time>
+                            <span class="remaining" data-testid="test-todo-time-remaining">Due in 3 days</span>
+                        
+                            
+                            <!-- <span class="time-hint" data-testid="test-todo-timing-remaining" aria-live="polite">
+                                Calculating...
+                            </span> -->
+                        </div>
+                        <span class="status" data-testid="test-todo-status">
+                            pending
+                        </span> 
+                    </div>
+                    <ul class="tag-list" data-testid="test-todo-tags" role="list">
+                        <li>
+                            <button type="button" class="tag" data-testid="test-todo-tag-work">Work</button>
+                        </li>
+                        <li>
+                            <button type="button" class="tag" data-testid="test-todo-tag-urgent">Urgent</button>
+                        </li>
+                        
+                    </ul>
+                </div>
+                <footer class="todo-action">
+                    <button class="btn btn-edit" data-testid="test-todo-edit-btn" aria-label="Edit Task">Edit</button>
+                    <button class="btn btn-delete" data-testid="test-todo-delete-btn" aria-label="Delete Task">Delete</button>
+                </footer>
+            </article>
+
+            <div id="undo-toast" class="undo-toast" style="display: none;" aria-live="assertive">
+                <span>Task deleted successfully.</span>
+                <button id="restore-btn" class="restore-link">UNDO</button>
+            </div>
+        </main>
+        <script src="script.js" defer></script>
+    </body>
+</html>
