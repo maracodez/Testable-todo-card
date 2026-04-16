@@ -8,62 +8,120 @@
     </head>
     <body>
         <main class="container">
-            <article class="todo-card" data-testid="test-todo-card">
-                <header class="todo-card-header">
-                    <h2 data-testid="test-todo-title">TESTABLE TODO ITEM CARD</h2>
-                    <div class="title-group">
-                        <div class="todo-group">
-                            <label for="todo-complete" data-testid="test-todo-complete-label" class="todo-complete">
-                                <input 
-                                    type="checkbox"
-                                    id="todo-complete"
-                                    data-testid="test-todo-complete-toggle"
-                                    aria-label="Mark task as complete"
-                                >
-                                <span class="slider"></span>
-                            </label>
-                            <label for="toggle-complete" class="toggle-complete"></label>
+            <article class="todo-card" data-testid="test-todo-card" id="main-card">
+                <div id="view-mode">
+                    <header class="todo-card-header">
+                        <div class="title-row">
+                            <!-- <input type="checkbox" id="view-checkbox" data-testid="test-todo-complete-toggle"> -->
+                            <h2 data-testid="test-todo-title">TESTABLE TODO ITEM CARD</h2>
                         </div>
-                        <span class="badge" data-testid="test-todo-priority" aria-label="High Priority">♦ High</span>
+
+                        <div class="todo-header">
+                            <div class="todo-group">
+                                <label for="view-checkbox" data-testid="test-todo-complete-label" class="todo-complete">
+                                    <input 
+                                        type="checkbox"
+                                        id="view-checkbox"
+                                        data-testid="test-todo-complete-toggle"
+                                    >
+                                    <span class="slider"></span>
+                                </label>
+                                
+                            </div>
+
+                            <div class="priority-row">
+                                <span id="priority-icon" data-testid="test-todo-priority-indicator"></span>
+                                <span data-testid="test-todo-priority">High</span>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div class="todo-body">
+                        <div class="description-area">
+                            
+                            <div id="collapsible-section" data-testid="test-todo-collapsible-section" class="collapsed">
+                                <p  data-testid="test-todo-description">
+                                    Helps check if the task is done properly and helps in editing and deleting without confusion.
+                                </p>
+                            </div>
+                            <button data-testid="test-todo-expand-toggle" aria-expanded="false" aria-controls="collapsible-section" >
+                                Expand
+                            </button>
+                        </div>
+                       
+
+                        <div class="meta-info">
+                            <div class="time-status-row">
+                                <time data-testid="test-todo-due-date"></time>
+                                <div class="timer-group">
+                                    <span data-testid="test-todo-time-remaining" aria-live="polite"></span>
+                                    <span data-testid="test-todo-overdue-indicator" class="overdue-badge" hidden>OVERDUE</span>
+                                </div>
+                            </div>
+
+                            <span data-testid="test-todo-status">Pending</span>
+                        </div>
+                        <ul class="tag-list" data-testid="test-todo-tags" role="list">
+                            <li>
+                                <button type="button" class="tag" data-testid="test-todo-tag-work">Work</button>
+                            </li>
+                            <li>
+                                <button type="button" class="tag" data-testid="test-todo-tag-urgent">Urgent</button>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    <footer class="todo-action">
+                        <button class="btn btn-edit" data-testid="test-todo-edit-btn" aria-label="Edit Task">Edit</button>
+                        <button class="btn btn-delete" data-testid="test-todo-delete-btn" aria-label="Delete Task">Delete</button>
+                    </footer>
+
+                </div>
+                
+                <form id="edit-mode" data-testid="test-todo-edit-form" class="edit-mode" hidden>
+                    <div class="edit-title-group">
+                        <label for="edit-title">Title: </label>
+                        <input type="text" id="edit-title" data-testid="test-todo-edit-title-input" required>
+                    </div>
+                    
+                    <div class="edit-desc-group">
+                        <label for="edit-desc">Description:</label>
+                        <textarea id="edit-desc" data-testid="test-todo-edit-description-input" maxlength="150px"></textarea>
+
+                    </div>
+                    
+                    <div class="edit-priority-group">
+                        <label for="edit-priority">Priority:</label>
+                        <select id="edit-priority" data-testid="test-todo-edit-priority-select">
+                            <option value="High" class="priority-tag">🔴 High</option>
+                            <option value="Medium" class="priority-tag">🟡 Medium</option>
+                            <option value="Low" class="priority-tag">🟢 Low</option>
+                        </select>
+                    </div>
+
+                    <div class="edit-status-group">
+                        <label for="edit-status">Status:</label>
+                        <select id="edit-status" data-testid="test-todo-edit-control">
+                            <option value="Pending" class="status-tag">Pending</option>
+                            <option value="In Progress" class="status-tag">In Progress</option>
+                            <option value="Done" class="status-tag">Done</option>
+                        </select>
+                    </div>
+                    
+                    <div class="edit-date-group">
+                        <label for="edit-date">Due Date</label>
+                        <input type="datetime-local" id="edit-date" data-testid="test-todo-edit-due-date-input">
                     </div>
                    
-                </header>
-
-                <div class="todo-body">
-                    <p  data-testid="test-todo-description">
-                        Helps check if the task is done properly and helps in editing and deleting without confusion.
-                    </p>
-
-                    <div class="meta-info">
-                        <div class="date-box">
-                            
-                            <time datetime="2026-05-01T18:00" data-testid="test-todo-due-date"> May 1, 2026</time>
-                            <span class="remaining" data-testid="test-todo-time-remaining">Due in 3 days</span>
-                        
-                            
-                            <!-- <span class="time-hint" data-testid="test-todo-timing-remaining" aria-live="polite">
-                                Calculating...
-                            </span> -->
-                        </div>
-                        <span class="status" data-testid="test-todo-status">
-                            pending
-                        </span> 
+                    <div class="form-buttons">
+                        <button type="submit" data-testid="test-todo-save-button" class="btn btn-save">Save</button>
+                        <button type="button" data-testid="test-todo-cancel-button" class="btn btn-cancel">Cancel</button>
                     </div>
-                    <ul class="tag-list" data-testid="test-todo-tags" role="list">
-                        <li>
-                            <button type="button" class="tag" data-testid="test-todo-tag-work">Work</button>
-                        </li>
-                        <li>
-                            <button type="button" class="tag" data-testid="test-todo-tag-urgent">Urgent</button>
-                        </li>
-                        
-                    </ul>
-                </div>
-                <footer class="todo-action">
-                    <button class="btn btn-edit" data-testid="test-todo-edit-btn" aria-label="Edit Task">Edit</button>
-                    <button class="btn btn-delete" data-testid="test-todo-delete-btn" aria-label="Delete Task">Delete</button>
-                </footer>
+                </form>
             </article>
+           
+                
+           
 
             <div id="undo-toast" class="undo-toast" style="display: none;" aria-live="assertive">
                 <span>Task deleted successfully.</span>
@@ -73,3 +131,4 @@
         <script src="script.js" defer></script>
     </body>
 </html>
+

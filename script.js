@@ -1,65 +1,121 @@
-const checkbox = document.querySelector('[data-testid="test-todo-complete-toggle"]');
-const card = document.querySelector('[data-testid="test-todo-card"]');
-const title = document.querySelector('[data-testid="test-todo-title"]');
-const statusText = document.querySelector('[data-testid="test-todo-status"]');
+//const checkbox = document.querySelector('[data-testid="test-todo-complete-toggle"]');
+const card = document.getElementById('main-card');
+const viewCheckbox = document.getElementById('view-checkbox');
+const timerDisplay = document.querySelector('[data-testid="test-todo-time-remaining"]')
+//const title = document.querySelector('[data-testid="test-todo-title"]');
+//const statusText = document.querySelector('[data-testid="test-todo-status"]');
 const label = document.querySelector('.toggle-complete');
-const badge = document.querySelector('[data-testid="test-todo-priority"]');
+//const badge = document.querySelector('[data-testid="test-todo-priority"]');
 const tagList = document.querySelector('[data-testid="test-todo-tags"]')
 const edit = document.querySelector('[data-testid="test-todo-edit-btn" ]');
 const cancel = document.querySelector('[data-testid="test-todo-delete-btn"]')
 const undoToast = document.getElementById('undo-toast');
 const restoreBtn = document.getElementById('restore-btn');
 
+let state = {
+    title: "Initial Todo Task",
+    desc: " Helps check if the task is done properly and helps in editing and deleting without confusion.",
+    priority: "High",
+    status: "Pending",
+    dueDate: "2026-04-20T18:00",
+    isExpanded: false
+};
 
-if (checkbox && title && statusText && label && badge) {
-	checkbox.addEventListener('change', (e) => {
-		const isChecked = e.target.checked;
-		const taskName = title.textContent;
+function updateUI() {
+	document.querySelector('[data-testid="test-todo-title"]').textContent = state.title;
+	document.querySelector('[data-testid="test-todo-description"]').textContent = state.desc;
+	document.querySelector('[data-testid="test-todo-priority"]').textContent = state.priority;
+	document.querySelector('[data-testid="test-todo-status"]').textContent = state.status;
+
+	viewCheckbox.checked = (state.status === "Done")
+	
+
+	card.classList.toggle('status-done', state.status === "Done");
+	card.classList.toggle('status-inprogress', state.status === "In Progress");
+	card.setAttribute('data-priority', state.priority);
+
+	//Expand/Collapse Logic
+    const section = document.getElementById('collapsible-section');
+    const toggleBtn = document.querySelector('[data-testid="test-todo-expand-toggle"]');
+    section.hidden = !state.isExpanded;
+    toggleBtn.setAttribute('aria-expanded', state.isExpanded);
+	toggleBtn.textContent = state.isExpanded ? "Collapse" : "Expand"; 
+}
+
+
+// if (checkbox && title && statusText && label && badge) {
+// 	checkbox.addEventListener('change', (e) => {
+// 		const isChecked = e.target.checked;
+// 		const taskName = title.textContent;
 
 		
-		// const newLabel = `Mark "${taskName}" as ${isChecked ? 'incomplete' : 'complete'}`;
-		// checkbox.setAttribute('aria-label', newLabel);
+// 		// const newLabel = `Mark "${taskName}" as ${isChecked ? 'incomplete' : 'complete'}`;
+// 		// checkbox.setAttribute('aria-label', newLabel);
 
 		
-		if (isChecked) {
-			title.style.textDecoration = "line-through";
-			statusText.textContent = "Done";
-			label.textContent = "Complete"
-			badge.textContent = "🟡Low"
-		} else {
-			title.style.textDecoration = "none";
-			statusText.textContent = "Pending";
-			label.textContent = "Incomplete";
-			badge.textContent = "🔴High"
-		}
+// 		if (isChecked) {
+// 			title.style.textDecoration = "line-through";
+// 			statusText.textContent = "Done";
+// 			label.textContent = "Complete"
+// 			badge.textContent = "🟡Low"
+// 		} else {
+// 			title.style.textDecoration = "none";
+// 			statusText.textContent = "Pending";
+// 			label.textContent = "Incomplete";
+// 			badge.textContent = "🔴High"
+// 		}
 
-		console.log(`Task "${taskName}" updated`)
-	});
-} 
+// 		console.log(`Task "${taskName}" updated`)
+// 	});
+// } 
 
 
 // Calculate Time Remaining
-function updateCountdown() {
-  const dueDate = new Date("2026-05-01T18:00:00").getTime();
-  const now = new Date().getTime();
-  const diff = dueDate - now;
-  const timeDisplay = document.querySelector('[data-testid="test-todo-time-remaining"]');
+function startCountdown() {
+	const overdueIndicator = document.querySelector('[data-testid="test-todo-overdue-indicator"]');
 
-  if (diff < 0) {
-    timeDisplay.textContent = "Overdue!";
-    return;
-  }
 
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  
-  if (days >= 2) timeDisplay.textContent = `Due in ${days} days`;
-  else if (days === 1) timeDisplay.textContent = "Due tomorrow";
-  else timeDisplay.textContent = "Due now!";
+	if (state.status === "Done") {
+		timerDisplay.textContent = "Completed";
+		overdueIndicator.hidden = true;
+		return
+	}
+
+	const diff = new Date(state.dueDate) - new Date();
+	const isOverdue = diff < 0;
+	const absDiff = Math.abs(diff);
+
+	overdueIndicator.hidden = !isOverdue;
+  	timerDisplay.style.color = isOverdue ? "red" : "inherit";
+
+	if (diff < 0) {
+		overdueIndicator.hidden = false;
+		timerDisplay.classList.add('overdue-text');
+	} else {
+		overdueIndicator.hidden = true;
+		timerDisplay.classList.remove('overdue-text');
+	}
+
+	
+	const days = Math.floor(absDiff / (1000 * 60 * 60 * 24));
+	const hrs = Math.floor((absDiff / (1000 * 60 * 60)) % 24);
+	const mins = Math.floor((absDiff / 1000 / 60) % 60);
+	const secs = Math.floor((absDiff / 1000) % 60);
+
+	timerDisplay.textContent = `${isOverdue ? 'Overdue by ' : 'Due in '}${days}d ${hrs}h ${mins}m ${secs}s`
+	
 }
 
-// Initial run and simple interval
-updateCountdown();
-setInterval(updateCountdown, 60000);
+viewCheckbox.addEventListener('change', (e) => {
+	state.status = e.target.checked ? "Done" : "Pending";
+	updateUI
+})
+
+// Expand Toggle
+document.querySelector('[data-testid="test-todo-expand-toggle"]').onclick = () => {
+    state.isExpanded = !state.isExpanded;
+    updateUI();
+};
 
 if (tagList) {
 	tagList.addEventListener('click', (e) => {
@@ -75,20 +131,21 @@ if (tagList) {
 	})
 }
 
-if (edit && title) {
-	edit.addEventListener("click", (e) => {
+edit.addEventListener('click', (e) => {
+	e.preventDefault();
 
-		//simple way to edit window.prompt
-		const newTitle = prompt("Edit Task Title:", title.textContent);
+	document.getElementById('view-mode').hidden = true;
+    document.getElementById('edit-mode').hidden = false;
 
-		if (newTitle !== null && newTitle.trim() !== "") {
-			title.textContent = newTitle;
-			console.log("Tag title updated to:", newTitle)
-		}
-	})
-}
+	// Fill form
+    document.getElementById('edit-title').value = state.title;
+    document.getElementById('edit-desc').value = state.desc;
+    document.getElementById('edit-priority').value = state.priority;
+    document.getElementById('edit-status').value = state.status;
+    document.getElementById('edit-date').value = state.dueDate;
+})
 
-let deleteTimeout;
+
 
 if (cancel && card) {
 	cancel.addEventListener('click', (e) => {
@@ -107,9 +164,39 @@ if (cancel && card) {
 	})
 }
 
+//handle save
+document.getElementById('edit-mode').onsubmit = (e) => {
+    e.preventDefault();
+    state.title = document.getElementById('edit-title').value;
+    state.desc = document.getElementById('edit-desc').value;
+    state.priority = document.getElementById('edit-priority').value;
+    state.status = document.getElementById('edit-status').value;
+    state.dueDate = document.getElementById('edit-date').value;
+
+    document.getElementById('view-mode').hidden = false;
+    document.getElementById('edit-mode').hidden = true;
+    updateUI();
+};
+
+document.querySelector('[data-testid="test-todo-cancel-button"]').onclick = () => {
+  document.getElementById('view-mode').hidden = false;
+  document.getElementById('edit-mode').hidden = true;
+};
+
+document.querySelector('[data-testid="test-todo-complete-toggle"]').onchange = (e) => {
+	
+    state.status = e.target.checked ? "Done" : "Pending";
+	console.log("clicked")
+    updateUI();
+};
+
 restoreBtn.addEventListener('click', () => {
 	clearTimeout(deleteTimeout);
 	card.style.display = "block";
 	undoToast.style.display = "none"
 
 })
+
+// Initial run and simple interval
+setInterval(startCountdown, 1000)
+updateUI();

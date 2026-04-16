@@ -30,48 +30,30 @@ body {
     margin: 0 auto;
     margin-top: 10px;
     backdrop-filter: blur(20px);
-    /* box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); */
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
     border-radius: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 15px;
+    /* gap: 15px; */
     justify-content: center;
     border: 2px solid #ccc;
-    padding: 20px;
+    padding: 10px;
 }
 
-.sr-only {
-    position: absolute; 
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-}
-
-/* .todo-card {
-    background: var(--bg-card);
-    width: 100%;
-    max-width: 500px;
-    padding: 1.5rem;
-    border-radius: 12px;
-   
-    border: 1px solid #e2e8f0;
-} */
+.todo-card {
+    transition: 0.3s;
+}    
 
 h2 {
     font-size: 2rem;
 }
 
-.todo-card.is-done h2 {
+/* .todo-card.is-done h2 {
     text-decoration: line-through;
     opacity: 0.6;
-}
+} */
 
 .todo-header {
     display: flex;
@@ -80,12 +62,6 @@ h2 {
     margin-bottom: 1rem;
 }
 
-.title-group {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
 
 .todo-group {
     display: flex;
@@ -148,7 +124,7 @@ input:checked + .slider::before {
     margin-top: 10px;
 }
 
-.badge {
+.overdue-badge {
     background: #fee2e2;
   color: #991b1b;
   padding: 2px 8px;
@@ -158,14 +134,10 @@ input:checked + .slider::before {
 
 .meta-info {
     display: flex;
-    justify-content: space-between;
-    margin-top: 1rem;
-    font-size: 0.875rem;
-}
-
-.time-hint { 
-    font-weight: 600; 
-    color: var(--primary); 
+    justify-content: center;
+    align-items: center;
+    gap: 8%;
+    margin-top: 10px;
 }
 
 .tag-list {
@@ -175,11 +147,6 @@ input:checked + .slider::before {
     padding: 0;
     list-style: none;
     margin: 1.5rem 0;
-}
-
-.data-box {
-    display: flex;
-    flex-direction: row;
 }
 
 .tag-list li {
@@ -206,10 +173,11 @@ input:checked + .slider::before {
     outline: 2px solid #2563eb;
 }
 
-.todo-actions {
+.todo-actions,
+.form-buttons {
     display: flex;
     gap: 12px;
-    border-top: 1px solid #f1f5f9;
+    /* border: 1px solid #f1f5f9; */
     padding-top: 1rem;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -221,14 +189,17 @@ input:checked + .slider::before {
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 700;
+    font-size: 0.9rem;
 }
 
-.btn-edit { 
+.btn-edit,
+.btn-save { 
     background: #d1d5db;
     transform: translateY(-1px);
 }
-.btn-delete { 
+.btn-delete,
+.btn-cancel { 
     background: #fee2e2; 
     color: #dc2626;
     border-color: #ef4444;
@@ -269,4 +240,97 @@ input:checked + .slider::before {
 .restore-link:hover {
     color: #93c5fd;
     text-decoration: underline;
+}
+
+.edit-title-group,
+.edit-desc-group,
+.edit-priority-group,
+.edit-status-group,
+.edit-date-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4%;
+    text-align: left;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.edit-title-group input,
+.edit-desc-group textarea,
+.edit-priority-group select,
+.edit-status-group select,
+.edit-date-group input {
+    max-width: 200px;
+    height: 50px;
+    outline: none;
+    background-color: transparent;
+    border: 1px solid #64748b;
+    border-radius: 5px;
+    padding: 6px;
+    font-size: 1rem;  
+}
+
+.edit-desc-group textarea {
+    scrollbar-width: none;
+}
+
+.priority-tag,
+.status-tag {
+    background-color: #93c5fd;
+}
+
+.status-done {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.status-inprogress {
+    border-left: 5px solid #3498db;
+}
+
+.overdue-text { 
+    color: #e74c3c; 
+    font-weight: bold;
+}
+
+.overdue-badge { 
+    background: #e74c3c; 
+    color: white; 
+    padding: 2px 5px; 
+    border-radius: 3px;
+}
+
+.collapsed { 
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Shows only 2 lines */
+  -webkit-box-orient: vertical;  
+  overflow: hidden; 
+}
+
+[data-testid="test-todo-expand-toggle" ] {
+    padding: 5px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-top: 8px;
+    display: none; 
+}
+
+.expanded { 
+    display: none; 
+     
+}
+
+
+#main-card[data-priority="High"] #priority-icon::before { content: "🔴"; }
+#main-card[data-priority="Medium"] #priority-icon::before { content: "🟡"; }
+#main-card[data-priority="Low"] #priority-icon::before { content: "🟢"; }
+
+@media screen and (max-width: 460px) {
+   [data-testid="test-todo-expand-toggle" ] { 
+        display: block; 
+        
+    }
 }
